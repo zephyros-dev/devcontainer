@@ -1,0 +1,10 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "regexManagers": [
+    {
+      "datasourceTemplate": "github-releases",
+      "fileMatch": ["dependencies.yaml"],
+      "matchStrings": ["(?<depName>.+?): (?<currentValue>.*?)\n"]
+    }
+  ]
+}
