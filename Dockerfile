@@ -38,4 +38,4 @@ RUN mkdir -p \
     ~/.terraform.d/plugin-cache \
     ~/bin
 
-ENV PATH=/home/${USERNAME}/.local/share/aquaproj-aqua/bin:${workspaceFolder}/.venv/bin:/home/${USERNAME}/bin:$PATH
+ENV PATH=/home/${USERNAME}/.local/share/aquaproj-aqua/bin:${workspaceFolder}/.venv/bin:${workspaceFolder}/.devcontainer/.venv/bin:$PATH

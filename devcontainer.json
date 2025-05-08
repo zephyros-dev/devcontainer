@@ -82,7 +82,9 @@
     "AQUA_GLOBAL_CONFIG": "/home/vscode/.config/aquaproj-aqua/aqua.yaml",
     "CONTAINER_HOST": "unix:///run/user/1000/podman/podman.sock",
     "DEBUG_MODE": "true",
-    "EDITOR": "code --wait"
+    "EDITOR": "code --wait",
+    "UV_CACHE_DIR": "./uv-cache",
+    "UV_PYTHON_PREFERENCE": "managed"
   },
   "updateRemoteUserUID": false,
   "runArgs": ["--userns=keep-id", "--privileged", "--network=host"],
