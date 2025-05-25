@@ -10,21 +10,12 @@
     "vscode": {
       "extensions": [
         "bierner.markdown-mermaid",
-        "brody715.vscode-cuelang",
-        "charliermarsh.ruff",
         "eamodio.gitlens",
         "esbenp.prettier-vscode",
-        "hashicorp.terraform",
         "mhutchie.git-graph",
         "mikestead.dotenv",
-        "ms-azuretools.vscode-containers",
-        "redhat.ansible",
         "richie5um2.vscode-sort-json",
-        "samuelcolvin.jinjahtml",
-        "signageos.signageos-vscode-sops",
-        "tamasfe.even-better-toml",
         "vivaxy.vscode-conventional-commits",
-        "wholroyd.jinja",
         "yzhang.markdown-all-in-one"
       ],
       "settings": {
