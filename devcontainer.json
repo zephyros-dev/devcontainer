@@ -10,6 +10,7 @@
     "vscode": {
       "extensions": [
         "bierner.markdown-mermaid",
+        "DavidAnson.vscode-markdownlint",
         "eamodio.gitlens",
         "esbenp.prettier-vscode",
         "mhutchie.git-graph",
@@ -33,6 +34,9 @@
         },
         "[yaml]": {
           "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[markdown]": {
+          "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
         },
         "ansible.python.interpreterPath": "${localWorkspaceFolder}/.venv/bin/python",
         "cue.moduleRoot": "${workspaceFolder}/cue",
