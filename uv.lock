@@ -81,15 +81,15 @@ wheels = [
 
 [[package]]
 name = "podman-compose"
-version = "1.4.0"
+version = "1.5.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "python-dotenv" },
     { name = "pyyaml" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/14/85/7f9ea7574a35226cb20022f5f206380d61cec9014be86df3cac0aa6a8899/podman_compose-1.4.0.tar.gz", hash = "sha256:c2d63410ef56af481d62c7264cf0653e1d0fefefdcee89c858a916f0f2e5f51f", size = 44895, upload-time = "2025-05-18T19:41:18.554Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/24/91/b168a685ca6813ff9b467d76a7365a099aec16a1032b6edf39b0cd19f6c3/podman_compose-1.5.0.tar.gz", hash = "sha256:5cc09362852711ce5d27648e41cb5fd058ea5a75acbcdec2f8d0b0c114a18e8e", size = 47377, upload-time = "2025-07-07T14:18:09.633Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a9/e4/3d9d1c67be91747189f1fda7b805fa4a1bd03ec736fc85739b0503b43dfc/podman_compose-1.4.0-py2.py3-none-any.whl", hash = "sha256:a930eb61fbd17dc0e28a43e922a69c9fc911747799d21cb7a7a8aa261d0f2906", size = 44494, upload-time = "2025-05-18T19:41:16.818Z" },
+    { url = "https://files.pythonhosted.org/packages/41/4b/75ab5c151b9d170fdae0048a6f6528535aff848140c007f408af9ac555d6/podman_compose-1.5.0-py3-none-any.whl", hash = "sha256:f0b9d35f4da1b309172adf208a5cb7a882b532a834c2202666c1988b6f147546", size = 47129, upload-time = "2025-07-07T14:18:08.373Z" },
 ]
 
 [[package]]
