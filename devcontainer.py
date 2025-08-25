@@ -7,12 +7,44 @@ from pathlib import Path
 
 import yaml
 
-go_arch_map = {
+GO_ARCH_DICT = {
     "x86_64": "amd64",
     "aarch64": "arm64",
 }
+MISE_ARCH_DICT = {"x86_64": "x64", "aarch64": "arm64"}
 
-go_arch = go_arch_map[platform.machine()]
+go_arch = GO_ARCH_DICT[platform.machine()]
+mise_arch = MISE_ARCH_DICT[platform.machine()]
+
+
+def insert_multiline_if_missing(file_path, multiline_str):
+    """
+    Inserts a multiline string into a file if the exact sequence of lines does not already exist.
+
+    Args:
+        file_path (str): The path to the file to be modified.
+        multiline_str (str): The multiline string to be inserted.
+    """
+    # Normalize line endings
+    multiline_str.strip().splitlines()
+
+    if not Path(file_path).exists():
+        Path(file_path).parent.mkdir(parents=True, exist_ok=True)
+        Path(file_path).touch()
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    # If the exact sequence already exists, do nothing
+    if multiline_str.strip() in content:
+        print(f"Multiline string already exists in the file {file_path}")
+        return
+
+    # Append the multiline string to the end of the file
+    with open(file_path, "a", encoding="utf-8") as f:
+        f.write("\n" + multiline_str.strip() + "\n")
+
+    print(f"Multiline string inserted into the file {file_path}")
 
 
 def check_version(command, desired_version):
@@ -61,6 +93,39 @@ def install_podman():
             )
 
 
+def install_mise():
+    if (Path(os.getcwd()) / "mise.toml").exists():
+        MISE_VERSION = yaml.safe_load(
+            Path(".devcontainer/dependencies.yaml").read_text()
+        )["jdx/mise"]
+        mise_bin_path = Path.home() / ".local/bin/mise"
+        mise_bin_path.parent.mkdir(parents=True, exist_ok=True)
+        local_bin_path = Path.home() / ".local/bin/"
+        local_bin_path.mkdir(parents=True, exist_ok=True)
+        if check_version("mise --version", MISE_VERSION):
+            subprocess.run(
+                f"curl -Lo {mise_bin_path} https://github.com/jdx/mise/releases/download/{MISE_VERSION}/mise-{MISE_VERSION}-linux-{mise_arch}",
+                shell=True,
+            )
+            os.chmod(mise_bin_path, 0o700)
+        (Path(Path.home()) / ".config/mise").mkdir(parents=True, exist_ok=True)
+
+        if not (Path.home() / ".config/mise/config.toml").is_symlink():
+            Path(Path.home() / ".config/mise/config.toml").symlink_to(
+                Path(os.getcwd()) / ".devcontainer/config.toml"
+            )
+        subprocess.run(["mise", "trust", "--all"])
+        for k, v in {
+            "bash": Path.home() / ".bashrc",
+            "fish": Path.home() / ".config/fish/config.fish",
+        }.items():
+            activate_string = subprocess.run(
+                f"mise activate {k}", shell=True, capture_output=True, text=True
+            )
+            insert_multiline_if_missing(v, activate_string.stdout)
+    subprocess.run(["mise", "install", "--yes"])
+
+
 def install_aqua():
     # Check if aqua.yaml is present
     if (Path(os.getcwd()) / "aqua.yaml").exists():
@@ -104,6 +169,7 @@ if __name__ == "__main__":
     if args.stage == "all" or args.stage == "onCreateCommand":
         install_podman()
         install_aqua()
+        install_mise()
         subprocess.run("aqua install --all", shell=True)
 
     if args.stage == "all" or args.stage == "postAttachCommand":
