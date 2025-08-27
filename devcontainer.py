@@ -3,9 +3,9 @@ import os
 import platform
 import re
 import subprocess
+import tomllib
 from pathlib import Path
 
-import tomllib
 import yaml
 
 GO_ARCH_DICT = {
@@ -114,9 +114,9 @@ if __name__ == "__main__":
     os.chdir("../")
 
     if args.stage == "all" or args.stage == "onCreateCommand":
-        install_podman()
         install_mise()
         subprocess.run(["mise", "install"])
+        install_podman()
 
     if args.stage == "all" or args.stage == "postAttachCommand":
         os.environ["PATH"] = (
