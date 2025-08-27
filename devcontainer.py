@@ -5,6 +5,7 @@ import re
 import subprocess
 from pathlib import Path
 
+import tomllib
 import yaml
 
 GO_ARCH_DICT = {
@@ -56,13 +57,15 @@ def check_version(command, desired_version):
 
 
 def install_podman():
-    podman_path = subprocess.run(
-        "mise which cue", shell=True, capture_output=True, text=True
-    ).stdout.strip()
-    subprocess.run(
-        f"ln --symbolic --force {podman_path} {Path.home()}/.local/bin/docker",
-        shell=True,
-    )
+    if Path("mise.toml").exists():
+        if "podman" in tomllib.loads(Path("mise.toml").read_text())["tools"]:
+            podman_path = subprocess.run(
+                "mise which podman", shell=True, capture_output=True, text=True
+            ).stdout.strip()
+            subprocess.run(
+                f"ln --symbolic --force {podman_path} {Path.home()}/.local/bin/docker",
+                shell=True,
+            )
 
 
 def install_mise():
@@ -116,6 +119,9 @@ if __name__ == "__main__":
         subprocess.run(["mise", "install"])
 
     if args.stage == "all" or args.stage == "postAttachCommand":
+        os.environ["PATH"] = (
+            f"{Path.home()}/.local/share/mise/shims:{os.environ['PATH']}"
+        )
         if Path(".pre-commit-config.yaml").exists():
             subprocess.run(
                 "git config --global init.templateDir ~/.git-template", shell=True

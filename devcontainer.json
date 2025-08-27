@@ -10,11 +10,13 @@
     "vscode": {
       "extensions": [
         "bierner.markdown-mermaid",
+        "charliermarsh.ruff",
         "DavidAnson.vscode-markdownlint",
         "eamodio.gitlens",
         "esbenp.prettier-vscode",
         "mhutchie.git-graph",
         "mikestead.dotenv",
+        "ms-python.python",
         "richie5um2.vscode-sort-json",
         "vivaxy.vscode-conventional-commits",
         "yzhang.markdown-all-in-one"
