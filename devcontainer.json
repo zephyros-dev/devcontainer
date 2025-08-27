@@ -62,8 +62,8 @@
     "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind",
     "source=${localEnv:XDG_RUNTIME_DIR}/podman/podman.sock,target=/run/user/1000/podman/podman.sock,type=bind",
     "source=ansible-cache,target=/home/vscode/.ansible,type=volume,chown=true",
-    "source=aqua-cache,target=/home/vscode/.local/share/aquaproj-aqua,type=volume,chown=true",
-    "source=custom-bin-cache,target=/home/vscode/bin,type=volume,chown=true",
+    "source=mise-local-cache,target=/home/vscode/.local/share/mise,type=volume,chown=true",
+    "source=mise-cache,target=/home/vscode/.cache/mise,type=volume,chown=true",
     "source=go,target=/home/vscode/go,type=volume,chown=true",
     "source=local-bin-cache,target=/home/vscode/.local/bin,type=volume,chown=true",
     "source=precommit-cache,target=/home/vscode/.cache/pre-commit,type=volume,chown=true",
@@ -74,7 +74,6 @@
   "onCreateCommand": "cd .devcontainer && uv sync && uv run devcontainer.py --stage onCreateCommand",
   "postAttachCommand": "cd .devcontainer && uv run devcontainer.py --stage postAttachCommand",
   "remoteEnv": {
-    "AQUA_GLOBAL_CONFIG": "/home/vscode/.config/aquaproj-aqua/aqua.yaml",
     "CONTAINER_HOST": "unix:///run/user/1000/podman/podman.sock",
     "DEBUG_MODE": "true",
     "EDITOR": "code --wait",

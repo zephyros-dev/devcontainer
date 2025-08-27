@@ -32,19 +32,13 @@ def insert_multiline_if_missing(file_path, multiline_str):
         Path(file_path).parent.mkdir(parents=True, exist_ok=True)
         Path(file_path).touch()
 
-    with open(file_path, "r", encoding="utf-8") as f:
-        content = f.read()
-
-    # If the exact sequence already exists, do nothing
-    if multiline_str.strip() in content:
+    if multiline_str in Path(file_path).read_text():
         print(f"Multiline string already exists in the file {file_path}")
         return
-
-    # Append the multiline string to the end of the file
-    with open(file_path, "a", encoding="utf-8") as f:
-        f.write("\n" + multiline_str.strip() + "\n")
-
-    print(f"Multiline string inserted into the file {file_path}")
+    else:
+        with open(file_path, "a") as f:
+            f.write("\n" + multiline_str + "\n")
+        print(f"Multiline string inserted into the file {file_path}")
 
 
 def check_version(command, desired_version):
@@ -62,35 +56,13 @@ def check_version(command, desired_version):
 
 
 def install_podman():
-    if Path("dependencies.yaml").exists():
-        dependencies_version = yaml.safe_load(Path("dependencies.yaml").read_text())
-    else:
-        dependencies_version = {}
-
-    if "containers/podman" in dependencies_version:
-        # Install latest version of podman
-        podman_path = Path.home() / "bin/podman"
-
-        PODMAN_VERSION = dependencies_version["containers/podman"]
-        if check_version("docker --version", PODMAN_VERSION):
-            subprocess.run(
-                f"curl -Lo {Path.home() / 'podman.tar.gz'} https://github.com/containers/podman/releases/download/{PODMAN_VERSION}/podman-remote-static-linux_{go_arch}.tar.gz",
-                shell=True,
-            )
-            subprocess.run(
-                f"tar -zxvf {Path.home() / 'podman.tar.gz'} -C {Path.home()}",
-                shell=True,
-            )
-            subprocess.run(
-                f"mv {Path.home()}/bin/podman-remote-static-linux_{go_arch} {podman_path}",
-                shell=True,
-            )
-
-            (Path.home() / ".local/bin").mkdir(parents=True, exist_ok=True)
-            subprocess.run(
-                f"ln --symbolic --force {podman_path} {Path.home()}/.local/bin/docker",
-                shell=True,
-            )
+    podman_path = subprocess.run(
+        "mise which cue", shell=True, capture_output=True, text=True
+    ).stdout.strip()
+    subprocess.run(
+        f"ln --symbolic --force {podman_path} {Path.home()}/.local/bin/docker",
+        shell=True,
+    )
 
 
 def install_mise():
@@ -126,34 +98,6 @@ def install_mise():
     subprocess.run(["mise", "install", "--yes"])
 
 
-def install_aqua():
-    # Check if aqua.yaml is present
-    if (Path(os.getcwd()) / "aqua.yaml").exists():
-        AQUA_VERSION = yaml.safe_load(
-            Path(".devcontainer/dependencies.yaml").read_text()
-        )["aquaproj/aqua"]
-        aqua_bin_dir_path = Path.home() / ".local/share/aquaproj-aqua/bin"
-        aqua_bin_dir_path.mkdir(parents=True, exist_ok=True)
-        local_bin_path = Path.home() / ".local/bin/"
-        local_bin_path.mkdir(parents=True, exist_ok=True)
-        if check_version("aqua --version", AQUA_VERSION):
-            subprocess.run(
-                f"curl -Lo {Path.home() / 'aqua.tar.gz'} https://github.com/aquaproj/aqua/releases/download/{AQUA_VERSION}/aqua_linux_{go_arch}.tar.gz",
-                shell=True,
-            )
-            subprocess.run(
-                f"tar -zxvf {Path.home() / 'aqua.tar.gz'} -C {local_bin_path} aqua",
-                shell=True,
-            )
-
-        (Path(Path.home()) / ".config/aquaproj-aqua").mkdir(parents=True, exist_ok=True)
-
-        if not (Path.home() / ".config/aquaproj-aqua/aqua.yaml").is_symlink():
-            Path(Path.home() / ".config/aquaproj-aqua/aqua.yaml").symlink_to(
-                Path(os.getcwd()) / "aqua.yaml"
-            )
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Setup devcontainer")
     parser.add_argument(
@@ -168,9 +112,8 @@ if __name__ == "__main__":
 
     if args.stage == "all" or args.stage == "onCreateCommand":
         install_podman()
-        install_aqua()
         install_mise()
-        subprocess.run("aqua install --all", shell=True)
+        subprocess.run(["mise", "install"])
 
     if args.stage == "all" or args.stage == "postAttachCommand":
         if Path(".pre-commit-config.yaml").exists():
