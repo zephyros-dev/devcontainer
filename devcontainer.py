@@ -3,9 +3,9 @@ import os
 import platform
 import re
 import subprocess
-import tomllib
 from pathlib import Path
 
+import tomllib
 import yaml
 
 GO_ARCH_DICT = {
@@ -90,14 +90,14 @@ def install_mise():
                 Path(os.getcwd()) / ".devcontainer/config.toml"
             )
         subprocess.run(["mise", "trust", "--all"])
-        for k, v in {
-            "bash": Path.home() / ".bashrc",
-            "fish": Path.home() / ".config/fish/config.fish",
-        }.items():
-            activate_string = subprocess.run(
-                f"mise activate {k}", shell=True, capture_output=True, text=True
-            )
-            insert_multiline_if_missing(v, activate_string.stdout)
+    for k, v in {
+        "bash": Path.home() / ".bashrc",
+        "fish": Path.home() / ".config/fish/config.fish",
+    }.items():
+        activate_string = subprocess.run(
+            f"mise activate {k}", shell=True, capture_output=True, text=True
+        )
+        insert_multiline_if_missing(v, activate_string.stdout)
     subprocess.run(["mise", "install", "--yes"])
 
 
