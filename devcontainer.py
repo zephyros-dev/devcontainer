@@ -3,9 +3,9 @@ import os
 import platform
 import re
 import subprocess
+import tomllib
 from pathlib import Path
 
-import tomllib
 import yaml
 
 GO_ARCH_DICT = {
@@ -60,7 +60,10 @@ def install_podman():
     if Path("mise.toml").exists():
         if "podman" in tomllib.loads(Path("mise.toml").read_text())["tools"]:
             podman_path = subprocess.run(
-                "mise which podman", shell=True, capture_output=True, text=True
+                f"mise which podman-remote-static-linux_{go_arch}",
+                shell=True,
+                capture_output=True,
+                text=True,
             ).stdout.strip()
             subprocess.run(
                 f"ln --symbolic --force {podman_path} {Path.home()}/.local/bin/docker",
