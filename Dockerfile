@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:0.11.24-debian-slim@sha256:301dd2dd00656798fafd5ba81ba6091032fb4674fcf24d01d8620824d80ea74d
+FROM ghcr.io/astral-sh/uv:0.11.25-debian-slim@sha256:463d232f7aaa58b7536a02ea435ad5ab195b3d56ac8c504c0d587efd751e1efe
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
